@@ -7,8 +7,8 @@ SET(ProjectName rover)
 SET(PICO_BOARD pico_w)
 
 # Import those libraries
-include(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/pico_sdk_import.cmake)
-include(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
+include($ENV{FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/pico_sdk_import.cmake)
+include($ENV{FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
 
 # Define project
 project(${ProjectName})
@@ -20,4 +20,4 @@ pico_sdk_init()
 add_subdirectory(src)
 
 # file to the "lib" directory
-#add_subdirectory(lib)
+add_subdirectory(lib/movement)
