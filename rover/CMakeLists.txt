@@ -22,3 +22,4 @@ add_subdirectory(src)
 # file to the "lib" directory
 add_subdirectory(lib/movement)
 add_subdirectory(lib/ultrasonic)
+add_subdirectory(lib/wandering)
