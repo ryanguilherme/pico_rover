@@ -11,7 +11,7 @@ include($ENV{FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/pico_sdk_impor
 include($ENV{FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
 
 # Define project
-project(${ProjectName})
+project(${ProjectName} CXX C ASM)
 
 # Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
