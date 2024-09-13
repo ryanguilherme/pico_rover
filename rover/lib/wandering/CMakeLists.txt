@@ -5,8 +5,8 @@ add_library(wandering
 
 target_link_libraries(wandering
 	pico_stdlib
-		movement
-		ultrasonic
+	movement
+	ultrasonic
 )
 
 target_include_directories(movement PUBLIC
