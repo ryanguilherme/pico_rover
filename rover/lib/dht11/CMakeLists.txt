@@ -3,7 +3,7 @@ add_library(dht11
 	dht11.c
 )
 
-target_link_libraries(ldr
+target_link_libraries(dht11
 	pico_stdlib
 )
 
