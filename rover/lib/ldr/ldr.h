@@ -21,4 +21,4 @@ void ldr_init();
  */
 double ldr_read();
 
-#endif LDR_H
+#endif //LDR_H
