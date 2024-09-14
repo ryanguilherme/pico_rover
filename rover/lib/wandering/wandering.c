@@ -11,13 +11,14 @@ void wandering_loop()
 
     while(1)
     {
-        while(ultrasonic_get_distance() <= 20)
+        double distance = ultrasonic_get_distance();
+        if (distance <= 20)
+        {
+            movement_rotate_right();
+        } else
         {
             movement_forward();
         }
-        while(ultrasonic_get_distance() > 20)
-        {
-            movement_rotate_right();
-        }
+        sleep_ms(50);
     }
 }
