@@ -8,20 +8,19 @@ void ultrasonic_init()
 
 double ultrasonic_get_distance()
 {
-    while(1)
-    {
-        gpio_put(TRIGGER_PIN, 1);
-        sleep_us(10);
-        gpio_put(TRIGGER_PIN, 0);
+    gpio_put(TRIGGER_PIN, 1);
+    sleep_us(10);
+    gpio_put(TRIGGER_PIN, 0);
 
-        while(gpio_get(ECHO_PIN) == 0) {}
-        const uint32_t time = time_us_32();
+    while(gpio_get(ECHO_PIN) == 0) {}
+    const uint32_t time = time_us_32();
 
-        while(gpio_get(ECHO_PIN) == 1) {}
-        const uint32_t end_time = time_us_32();
+    while(gpio_get(ECHO_PIN) == 1) {}
+    const uint32_t end_time = time_us_32();
 
-        const uint32_t pulse_duration = end_time - time;
 
-        return ((double)pulse_duration * 0.000343) / 2;
-    }
+    const uint32_t pulse_duration = end_time - time;
+
+    return (pulse_duration * 0.0343) / 2;
+    
 }
