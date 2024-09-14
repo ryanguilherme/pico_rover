@@ -12,6 +12,7 @@ target_link_libraries(${ProjectName}
     FreeRTOS-Kernel-Heap4 
     pico_cyw43_arch_none
     movement
+    wandering
     )
 
 pico_enable_stdio_usb(${ProjectName} 1)
