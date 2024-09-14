@@ -22,5 +22,5 @@ double ultrasonic_get_distance()
     const uint32_t pulse_duration = end_time - time;
 
     return (pulse_duration * 0.0343) / 2;
-    
+
 }
