@@ -2,15 +2,15 @@
 Analytic Rover that walks autonomally and collect multiple data like humidity, temperature, luminosity and display in a WEB host in real-time using FreeRTOS and a Raspberry Pi Pico with a RP2040 processor.
 
 ## Components
-
-- **Raspberry Pi Pico**: A compact and powerful microcontroller that serves as the brain of the rover.
-- **FreeRTOS**: A real-time operating system that efficiently manages the rover's tasks.
-- **L298N**: A motor driver used to control the direction and speed of DC motors.
-- **DC Motors 6V**: Actuators that allow the rover to move.
-- **DHT11**: A sensor that measures temperature and humidity.
-- **LDR (Light Dependent Resistor)**: A light sensor that turns on the rover's headlights in low-light conditions.
-- **Rain Sensor**: A sensor that detects the presence of water, simulating adverse weather conditions.
-
+| Component            | Description                                                   | Image                      |
+|----------------------|---------------------------------------------------------------|----------------------------|
+| **Raspberry Pi Pico**| A compact and powerful microcontroller that serves as the brain of the rover. | ![Raspberry Pi Pico](/assets/img/rpi_pico.jpg) |
+| **FreeRTOS**         | A real-time operating system that efficiently manages the rover's tasks. | ![FreeRTOS](/assets/img/freertos_logo.png) |
+| **L298N**            | A motor driver used to control the direction and speed of DC motors. | ![L298N](/assets/img/l298n.jpg) |
+| **DC Motors 6V**     | Actuators that allow the rover to move.                      | ![DC Motors](/assets/img/dc_motors.png) |
+| **DHT11**            | A sensor that measures temperature and humidity.             | ![DHT11](/assets/img/dht11.jpg) |
+| **LDR (Light Dependent Resistor)** | A light sensor that turns on the rover's headlights in low-light conditions. | ![LDR](/assets/img/ldr.png) |
+| **Rain Sensor**      | A sensor that detects the presence of water, simulating adverse weather conditions. | ![Rain Sensor](/assets/img/rain_sensor.png) |
 ## Features
 
 The rover has several features that make it suitable for simulation and exploration that make them possible of wandering, collect data and expose in a web server:
