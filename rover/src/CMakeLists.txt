@@ -13,6 +13,7 @@ target_link_libraries(${ProjectName}
     pico_cyw43_arch_none
     movement
     wandering
+    web
     )
 
 pico_enable_stdio_usb(${ProjectName} 1)

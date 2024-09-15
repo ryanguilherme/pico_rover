@@ -11,6 +11,7 @@
 #include "task.h"
 #include "movement.h"
 #include "wandering.h"
+#include "web.h"
 
 void movement_tests()
 {
@@ -50,6 +51,7 @@ void ultrasonic_test()
 
 int main()
 {
+    web_setup();
     stdio_init_all();
 
     //if (cyw43_arch_init()) return -1;

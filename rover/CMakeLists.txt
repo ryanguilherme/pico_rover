@@ -16,6 +16,12 @@ project(${ProjectName} CXX C ASM)
 # Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+message("Running makefsdata python script")
+execute_process(COMMAND
+    py makefsdata.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+)
+
 # Add subdirectories
 add_subdirectory(src)
 
@@ -25,3 +31,4 @@ add_subdirectory(lib/ultrasonic)
 add_subdirectory(lib/wandering)
 add_subdirectory(lib/ldr)
 add_subdirectory(lib/dht11)
+add_subdirectory(lib/web)
