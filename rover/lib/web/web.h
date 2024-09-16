@@ -8,14 +8,14 @@
 #include "cgi.h"
 
 // WIFI Credentials - take care if pushing to github!
-const char WIFI_SSID[] = "rover";
-const char WIFI_PASSWORD[] = "roverrover";
+const char WIFI_SSID[] = "Rover";
+const char WIFI_PASSWORD[] = "12345678";
 
 void web_setup() {
     cyw43_arch_enable_sta_mode();
 
     // Connect to the WiFI network - loop until connected
-    while(cyw43_arch_wifi_connect_timeout_ms(WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK, 30000) != 0){
+    while(cyw43_arch_wifi_connect_timeout_ms(WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK, 60000) != 0){
         printf("Attempting to connect...\n");
     }
     // Print a success message once connected

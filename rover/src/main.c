@@ -15,18 +15,19 @@
 
 int main()
 {
-    web_setup();
-    stdio_init_all();
 
+    stdio_init_all();
+	web_setup();
     //if (cyw43_arch_init()) return -1;
 	//movement_init();
-	wandering_setup();
+	//wandering_setup();
 	//ultrasonic_init();
 	//xTaskCreate(movement_tests, "WanderingLoopTask", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 
-	xTaskCreate(wandering_loop, "WanderingLoopTask", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+	//xTaskCreate(wandering_loop, "WanderingLoopTask", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 
-	vTaskStartScheduler();
+	//vTaskStartScheduler();
+	while(1);
 }
 
 

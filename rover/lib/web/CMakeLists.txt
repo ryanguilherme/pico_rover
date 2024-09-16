@@ -1,4 +1,5 @@
 add_library(web
+	lwipopts.h
 	cgi.h
 	ssi.h
 	web.h
@@ -6,7 +7,7 @@ add_library(web
 
 target_link_libraries(web
 	pico_stdlib
-    	pico_cyw43_arch_lwip_threadsafe_background
+	pico_cyw43_arch_lwip_threadsafe_background
 	pico_lwip_http
 	hardware_adc
 )
