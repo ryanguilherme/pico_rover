@@ -117,14 +117,14 @@ To use the rover:
    - Compile the code using the appropriate compiler for the Raspberry Pi Pico.
    ```bash
     cd rover
-    cd src
     mkdir build
+    cd build
     cmake ..
     make
    ```
    - Upload the code to the Raspberry Pi Pico. For this, you need to press the bootsel of your Raspberry Pi Pico and identificate what serial gate she connect. In general, is `/dev/ttyACM0`. After this, write in your console (inside build paste):
    ```bash
-    cp rover.uf2 /media/seu_usuario/RPI-RP2/
+    cp src/rover.uf2 /media/seu_usuario/RPI-RP2/
    ```
 
 ## Installation
