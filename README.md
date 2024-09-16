@@ -1,16 +1,19 @@
 # Analytic Rover
+
 Analytic Rover that walks autonomally and collect multiple data like humidity, temperature, luminosity and display in a WEB host in real-time using FreeRTOS and a Raspberry Pi Pico with a RP2040 processor.
 
 ## Components
-| Component            | Description                                                   | Image                      |
-|----------------------|---------------------------------------------------------------|----------------------------|
-| **Raspberry Pi Pico**| A compact and powerful microcontroller that serves as the brain of the rover. | ![Raspberry Pi Pico](/assets/img/rpi_pico.jpg) |
-| **FreeRTOS**         | A real-time operating system that efficiently manages the rover's tasks. | ![FreeRTOS](/assets/img/freertos_logo.png) |
-| **L298N**            | A motor driver used to control the direction and speed of DC motors. | ![L298N](/assets/img/l298n.jpg) |
-| **DC Motors 6V**     | Actuators that allow the rover to move.                      | ![DC Motors](/assets/img/dc_motors.png) |
-| **DHT11**            | A sensor that measures temperature and humidity.             | ![DHT11](/assets/img/dht11.jpg) |
-| **LDR (Light Dependent Resistor)** | A light sensor that turns on the rover's headlights in low-light conditions. | ![LDR](/assets/img/ldr.png) |
-| **Rain Sensor**      | A sensor that detects the presence of water, simulating adverse weather conditions. | ![Rain Sensor](/assets/img/rain_sensor.png) |
+
+| Component                          | Description                                                                         | Image                                                                                           |
+| ---------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| **Raspberry Pi Pico**              | A compact and powerful microcontroller that serves as the brain of the rover.       | <img title="a title" alt="Alt text" src="assets/img/rpipico.png" width="200px" align="center"> |
+| **FreeRTOS**                       | A real-time operating system that efficiently manages the rover's tasks.            | <img title="a title" alt="Alt text" src="assets/img/freertos_logo.png" width="200px">           |
+| **L298N**                          | A motor driver used to control the direction and speed of DC motors.                | <img title="a title" alt="Alt text" src="assets/img/l298n.png" width="200px">                   |
+| **DC Motors 6V**                   | Actuators that allow the rover to move.                                             | <img title="a title" alt="Alt text" src="assets/img/dcmotor.png" width="200px">               |
+| **DHT11**                          | A sensor that measures temperature and humidity.                                    | <img title="a title" alt="Alt text" src="assets/img/dht11.jpg" width="200px">                   |
+| **LDR (Light Dependent Resistor)** | A light sensor that turns on the rover's headlights in low-light conditions.        | <img title="a title" alt="Alt text" src="assets/img/ldr.png" width="200px">                     |
+| **Rain Sensor**                    | A sensor that detects the presence of water, simulating adverse weather conditions. | <img title="a title" alt="Alt text" src="assets/img/rain_sensor.png" width="200px">             |
+
 ## Features
 
 The rover has several features that make it suitable for simulation and exploration that make them possible of wandering, collect data and expose in a web server:
@@ -26,6 +29,7 @@ The rover has several features that make it suitable for simulation and explorat
 The project is organized as follows:
 
 - **Root Directory**:
+
   - `README.md`: This file, containing project information and instructions.
   - `rover`: Main project directory containing the source code and libraries.
 
@@ -54,13 +58,25 @@ The project is organized as follows:
     │   │   ├── ldr.c
     │   │   ├── ldr.h
     │   │   └── CMakeLists.txt
-    │   ├── rain_sensor
-    │   │   ├── rain_sensor.c
-    │   │   ├── rain_sensor.h
+    │   ├── movement
+    │   │   ├── movement.c
+    │   │   ├── movement.h
     │   │   └── CMakeLists.txt
-    │   └── motor_control
-    │       ├── motor_control.c
-    │       ├── motor_control.h
+    │   ├── mpu6050
+    │   │   ├── mpu6050.c
+    │   │   ├── mpu6050.h
+    │   │   └── CMakeLists.txt
+    │   ├── rain
+    │   │   ├── rain.c
+    │   │   ├── rain.h
+    │   │   └── CMakeLists.txt
+    │   ├── ultrasonic
+    │   │   ├── ultrasonic.c
+    │   │   ├── ultrasonic.h
+    │   │   └── CMakeLists.txt
+    │   └── wandering
+    │       ├── wandering.c
+    │       ├── wandering.h
     │       └── CMakeLists.txt
     └── src
         ├── main.c
@@ -74,17 +90,19 @@ The project is organized as follows:
 To assemble and use the rover, you will need the following hardware and software components:
 
 - **Hardware**:
+
   - Raspberry Pi Pico
   - L298N
   - DC Motors 6V
   - DHT11
   - LDR
+  - MPU6050
   - Rain Sensor
   - Wires and connectors
   - Power supply
 
 - **Software**:
-  - For compiling the code, you need a Cmake and Make version installing in your machine and a crosscompiler for arm processor, where the most common is the arm-none-eabi cross compiler. 
+  - For compiling the code, you need a Cmake and Make version installing in your machine and a crosscompiler for arm processor, where the most common is the arm-none-eabi cross compiler.
   - So, for linux users, write in your console:
   ```bash
     sudo apt install cmake make
@@ -98,6 +116,7 @@ To use the rover:
 1. **Compilation and Upload**:
    - Compile the code using the appropriate compiler for the Raspberry Pi Pico.
    ```bash
+    cd rover
     cd src
     mkdir build
     cmake ..
@@ -105,7 +124,7 @@ To use the rover:
    ```
    - Upload the code to the Raspberry Pi Pico. For this, you need to press the bootsel of your Raspberry Pi Pico and identificate what serial gate she connect. In general, is `/dev/ttyACM0`. After this, write in your console (inside build paste):
    ```bash
-    cp rover.ufc /media/seu_usuario/RPI-RP2/
+    cp rover.uf2 /media/seu_usuario/RPI-RP2/
    ```
 
 ## Installation
@@ -113,9 +132,10 @@ To use the rover:
 Setting up the hardware and software is a straightforward process:
 
 1. **Hardware Setup**:
+
    - Connect the DC motors to the L298N motor driver.
    - Connect the L298N to the Raspberry Pi Pico.
-   - Connect the sensors (DHT11, LDR, and rain sensor) to the appropriate pins on the Raspberry Pi Pico.
+   - Connect the sensors (DHT11, LDR, mpu6050 and rain sensor) to the appropriate pins on the Raspberry Pi Pico.
 
 2. **Software Setup**:
    - Follow the steps provided by [usage](#usage) section
