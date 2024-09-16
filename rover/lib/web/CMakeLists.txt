@@ -1,7 +1,4 @@
 add_library(web
-	lwipopts.h
-	cgi.h
-	ssi.h
 	web.h
 )
 
