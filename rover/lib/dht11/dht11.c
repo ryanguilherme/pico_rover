@@ -2,7 +2,12 @@
 
 void dht11_init()
 {
-    gpio_init(DHT11_DATA_PIN);      
+    gpio_init(DHT11_DATA_PIN);
+}
+
+int dht11_read_data(int *temperature, int *humidity)
+{
+    uint8_t data[5] = {0, 0, 0, 0, 0};
     gpio_set_dir(DHT11_DATA_PIN, GPIO_OUT);
     gpio_put(DHT11_DATA_PIN, 0);
     sleep_ms(18);
@@ -12,11 +17,6 @@ void dht11_init()
     while(gpio_get(DHT11_DATA_PIN) == 1) {}
     while(gpio_get(DHT11_DATA_PIN) == 0) {}
     while(gpio_get(DHT11_DATA_PIN) == 1) {}
-}
-
-int dht11_read_data(float *temperature, float *humidity)
-{
-    uint8_t data[5] = {0, 0, 0, 0, 0};
     for (int i=0; i<40; i++)
     {
         while(gpio_get(DHT11_DATA_PIN) == 0) {}

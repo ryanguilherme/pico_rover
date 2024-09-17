@@ -3,7 +3,7 @@
 
 #include "pico/stdlib.h"
 
-#define DHT11_DATA_PIN 15
+#define DHT11_DATA_PIN 14
 
 /*
  * [NAME]:        Init
@@ -18,6 +18,6 @@ void dht11_init();
  * [PARAMETERS]:  float *, float *
  * [DESCRIPTION]: Read DHT11 temperature and humidity and associate it with a respective pointer
  */
-int dht11_read_data(float *temperature, float *humidity);
+int dht11_read_data(int *temperature, int *humidity);
 
 #endif 
