@@ -1,22 +1,27 @@
 #include "wandering.h"
 
-double mutexDistance;
+extern double mutexDistance;
+
 void wandering_setup()
 {
     movement_init();
 }
 
-void wandering_loop(QueueHandle_t queue)
+void wandering_loop(SemaphoreHandle_t semphr)
 {
     double distance;
     while(1)
     {
-        if (!xQueueReceive(queue, &distance, portMAX_DELAY))
+        if (xSemaphoreTake(semphr, portMAX_DELAY) != pdTRUE)
         {
-            printf("[ERROR 0201]: Could not read from Ultrasonic Data Queue\n");
+            printf("[ERROR 0201]: Could not take Ultrasonic Mutex\n");
+            xSemaphoreGive(semphr);
         }
+
         else
         {
+            distance = mutexDistance;
+            xSemaphoreGive(semphr);
             printf("ULTRASONIC DISTANCE: %f\n", distance);
             if (distance <= MAX_DISTANCE)
             {

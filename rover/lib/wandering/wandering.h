@@ -6,6 +6,7 @@
 #include "pico/stdlib.h"
 #include "movement.h"
 #include "queue.h"
+#include "semphr.h"
 
 
 #define MAX_DISTANCE 40
@@ -16,6 +17,7 @@
  * [PARAMETERS]:  void
  * [DESCRIPTION]: Initialize every necessary pin for the rover wandering functionality
  */
+extern double mutexDistance;
 void wandering_setup();
 /*
  * [NAME]:        Loop
@@ -23,6 +25,6 @@ void wandering_setup();
  * [PARAMETERS]:  void
  * [DESCRIPTION]: Makes the rover starts wandering avoiding obstacles
  */
-void wandering_loop(QueueHandle_t queue);
+void wandering_loop(SemaphoreHandle_t semphr);
 
 #endif //WANDERING_H
