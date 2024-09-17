@@ -1,9 +1,14 @@
 #ifndef WANDERING_H
 #define WANDERING_H
 
+#include "FreeRTOS.h"
+#include <stdio.h>
 #include "pico/stdlib.h"
 #include "movement.h"
-#include "ultrasonic.h"
+#include "queue.h"
+
+
+#define MAX_DISTANCE 40
 
 /*
  * [NAME]:        Setup
@@ -14,10 +19,10 @@
 void wandering_setup();
 /*
  * [NAME]:        Loop
- * [FUNCTION]:    wandering_loop()
+ * [FUNCTION]:    wandering_loop(QueueHandle_t queue)
  * [PARAMETERS]:  void
  * [DESCRIPTION]: Makes the rover starts wandering avoiding obstacles
  */
-void wandering_loop();
+void wandering_loop(QueueHandle_t queue);
 
 #endif //WANDERING_H
