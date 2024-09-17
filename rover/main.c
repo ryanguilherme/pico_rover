@@ -34,7 +34,6 @@ void wandering_task()
 
 void dht11_task()
 {
-    sleep_ms(2000);
     int temperature;
     int humidity;
     dht11_init();
@@ -48,6 +47,20 @@ void dht11_task()
     }
 }
 
+void ldr_task()
+{
+    uint16_t ldr_value;
+    ldr_init();
+    while(1)
+    {
+        ldr_value = ldr_read();
+        if (ldr_value >= 3800) ldr_headlight_toggle(1);
+        else                   ldr_headlight_toggle(0);
+        printf("LDR VALUE: %d\n", ldr_value);
+        vTaskDelay(pdMS_TO_TICKS(200));
+    }
+}
+
 int main() {
     stdio_init_all();
 	//web_setup();
@@ -56,7 +69,8 @@ int main() {
 
     xTaskCreate(ultrasonic_task, "UltrasonicTask", 256, NULL, 1, NULL);
     xTaskCreate(wandering_task, "WanderingTask", 256, NULL, 1, NULL);
-    xTaskCreate(dht11_task, "dht11Task", 256, NULL, 1, NULL);
+    xTaskCreate(dht11_task, "DHT11Task", 256, NULL, 2, NULL);
+    xTaskCreate(ldr_task, "LDRTask", 256, NULL, 1, NULL);
 
     vTaskStartScheduler();
     // Code should never reach here
