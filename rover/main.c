@@ -4,6 +4,7 @@
 #include "ultrasonic.h"
 #include "task.h"
 #include "queue.h"
+#include "semphr.h"
 #include "wandering.h"
 #include "ldr.h"
 #include "dht11.h"
@@ -11,17 +12,26 @@
 #define QUEUE_LENGTH 10
 
 QueueHandle_t ultrasonic_queue;
+SemaphoreHandle_t ultrasonic_semaphore;
+
+double mutex_distance;
 
 void ultrasonic_task()
 {
     ultrasonic_init();
     while(1)
     {
+
         double distance = ultrasonic_get_distance();
-        if (xQueueSend(ultrasonic_queue, &distance, portMAX_DELAY) != pdPASS)
+        if (xSemaphoreTake(ultrasonic_semaphore, portMAX_DELAY) != pdTRUE)
         {
-            printf("[ERROR 0101]: Failed to send Ultrasonic Distance Data to respective queue!\n");
+            printf("[ERROR 0101]: Could not take Ultrasonic Mutex\n");
         }
+        else{
+            mutex_distance = distance;
+        }
+        xSemaphoreGive(ultrasonic_semaphore);
+
         vTaskDelay(pdMS_TO_TICKS(200));
     }
 }
@@ -29,7 +39,7 @@ void ultrasonic_task()
 void wandering_task()
 {
     wandering_setup();
-    wandering_loop(ultrasonic_queue);
+    wandering_loop(ultrasonic_semaphore);
 }
 
 void dht11_task()
@@ -66,6 +76,13 @@ int main() {
 	//web_setup();
 
     ultrasonic_queue = xQueueCreate(QUEUE_LENGTH, sizeof(double));
+    ultrasonic_semaphore = xSemaphoreCreateMutex();
+
+    if(ultrasonic_semaphore == NULL)
+    {
+        printf("[ERROR 0001]: Could not create Ultrasonic Semaphore\n");
+        while(1);
+    }
 
     xTaskCreate(ultrasonic_task, "UltrasonicTask", 256, NULL, 1, NULL);
     xTaskCreate(wandering_task, "WanderingTask", 256, NULL, 1, NULL);
