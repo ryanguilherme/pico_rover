@@ -25,7 +25,7 @@ void wandering_loop(QueueHandle_t queue)
             {
                 movement_forward();
             }
-            sleep_ms(10);
+            vTaskDelay(pdMS_TO_TICKS(200));
         }
     }
 }
