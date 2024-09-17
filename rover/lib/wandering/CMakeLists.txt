@@ -7,6 +7,7 @@ target_link_libraries(wandering
 	pico_stdlib
 	movement
 	ultrasonic
+	FreeRTOS-Kernel-Heap4
 )
 
 target_include_directories(movement PUBLIC

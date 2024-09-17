@@ -7,7 +7,7 @@ target_link_libraries(ultrasonic
         pico_stdlib
 )
 
-target_include_directories(movement PUBLIC
+target_include_directories(ultrasonic PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}
 )
 

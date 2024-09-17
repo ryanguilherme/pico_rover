@@ -27,6 +27,8 @@ add_executable(${ProjectName}
     main.c
 )
 
+include_directories(${CMAKE_SOURCE_DIR})
+
 target_include_directories(${ProjectName} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
     ${PROJECT_SOURCE_DIR}/lib
@@ -34,11 +36,12 @@ target_include_directories(${ProjectName} PRIVATE
 
 #Link libraries
 target_link_libraries(${ProjectName}
-    pico_cyw43_arch_lwip_threadsafe_background
-    pico_lwip_http
+    FreeRTOS-Kernel-Heap4
     pico_stdlib
     hardware_adc
     web
+    ultrasonic
+    wandering
 )
 
 #Add subdirectories
