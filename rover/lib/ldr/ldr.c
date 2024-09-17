@@ -6,7 +6,7 @@ void ldr_init()
     adc_select_input(0);
 }
 
-double ldr_read()
+int16_t ldr_read()
 {
     return adc_read();
 }

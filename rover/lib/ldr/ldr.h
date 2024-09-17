@@ -19,6 +19,6 @@ void ldr_init();
  * [PARAMETERS]:  void
  * [DESCRIPTION]: Read the LDR sensor value and return the light intensity
  */
-double ldr_read();
+int16_t ldr_read();
 
 #endif //LDR_H
