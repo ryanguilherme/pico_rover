@@ -42,6 +42,8 @@ target_link_libraries(${ProjectName}
     web
     ultrasonic
     wandering
+    ldr
+    dht11
 )
 
 #Add subdirectories
