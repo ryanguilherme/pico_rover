@@ -8,7 +8,6 @@ void wandering_setup()
 
 void wandering_loop(QueueHandle_t queue)
 {
-    gpio_init(15); gpio_set_dir(15, GPIO_OUT);
     double distance;
     while(1)
     {
@@ -21,11 +20,9 @@ void wandering_loop(QueueHandle_t queue)
             printf("ULTRASONIC DISTANCE: %f\n", distance);
             if (distance <= MAX_DISTANCE)
             {
-                gpio_put(15, 1);
                 movement_rotate_right();
             } else
             {
-                gpio_put(15, 0);
                 movement_forward();
             }
             sleep_ms(10);
