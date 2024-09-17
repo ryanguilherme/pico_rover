@@ -5,6 +5,8 @@
 #include "task.h"
 #include "queue.h"
 #include "wandering.h"
+#include "ldr.h"
+#include "dht11.h"
 
 #define QUEUE_LENGTH 10
 
@@ -30,6 +32,22 @@ void wandering_task()
     wandering_loop(ultrasonic_queue);
 }
 
+void dht11_task()
+{
+    sleep_ms(2000);
+    int temperature;
+    int humidity;
+    dht11_init();
+    while(1)
+    {
+        if (dht11_read_data(&temperature, &humidity) == 0)
+            printf("TEMPERATURE: %d, HUMIDITY: %d\n", temperature, humidity);
+        else
+            printf("[ERROR 0301]: Could not Read Data from DHT11\n");
+        vTaskDelay(pdMS_TO_TICKS(200));
+    }
+}
+
 int main() {
     stdio_init_all();
 	//web_setup();
@@ -38,6 +56,7 @@ int main() {
 
     xTaskCreate(ultrasonic_task, "UltrasonicTask", 256, NULL, 1, NULL);
     xTaskCreate(wandering_task, "WanderingTask", 256, NULL, 1, NULL);
+    xTaskCreate(dht11_task, "dht11Task", 256, NULL, 1, NULL);
 
     vTaskStartScheduler();
     // Code should never reach here
