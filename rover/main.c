@@ -62,15 +62,34 @@ void ldr_task(void *pvParameters)
     }
 }
 
+void pwm_test_task() {
+    movement_init();
+    while(1) {
+        movement_set_speed(50);
+        printf("DUTY CYCLE 50\n");
+        sleep_ms(2000);
+        movement_set_speed(25);
+        printf("DUTY CYCLE 25\n");
+        sleep_ms(2000);
+        movement_set_speed(10);
+        printf("DUTY CYCLE 10\n");
+        sleep_ms(2000);
+        movement_set_speed(100);
+        printf("DUTY CYCLE 10\n");
+        vTaskDelay(pdMS_TO_TICKS(100));
+    }
+}
+
 int main() {
     stdio_init_all();
 	//web_setup();
 
-    ultrasonic_queue = xQueueCreate(QUEUE_LENGTH, sizeof(double));
-
-    xTaskCreate(ultrasonic_task, "UltrasonicTask", 256, NULL, 1, NULL);
-    xTaskCreate(wandering_task, "WanderingTask", 256, NULL, 1, NULL);
-    xTaskCreate(dht11_task, "dht11Task", 256, NULL, 1, NULL);
+    // ultrasonic_queue = xQueueCreate(QUEUE_LENGTH, sizeof(double));
+    //
+    // xTaskCreate(ultrasonic_task, "UltrasonicTask", 256, NULL, 1, NULL);
+    // xTaskCreate(wandering_task, "WanderingTask", 256, NULL, 1, NULL);
+    // xTaskCreate(dht11_task, "dht11Task", 256, NULL, 1, NULL);
+    xTaskCreate(pwm_test_task, "pwmTestTask", 256, NULL, 1, NULL);
 
     vTaskStartScheduler();
     // Code should never reach here
