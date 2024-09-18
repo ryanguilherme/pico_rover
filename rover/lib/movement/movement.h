@@ -1,6 +1,7 @@
 #ifndef MOVEMENT_H
 #define MOVEMENT_H
 #include "pico/stdlib.h"
+#include "hardware/pwm.h"
 
 #define GPIO_HIGH 1
 #define GPIO_LOW  0
@@ -12,7 +13,8 @@
 #define IN4 8
 
 // L298N ATV PORT (duty cycle determines the motor speed)
-#define SPEED_PWM 9
+#define PWM_SPEED_PIN 9
+#define PWM_FREQUENCY 100
 
 /*
  * [NAME]:        Init
@@ -49,5 +51,12 @@ void movement_rotate_right();
  * [DESCRIPTION]: Set the necessary combination of L298N INx ports to make the rover stop (stand still)
  */
 void movement_stop();
+/*
+ * [NAME]:        Set Speed
+ * [FUNCTION]:    movement_set_speed()
+ * [PARAMETERS]:  void
+ * [DESCRIPTION]: Set the PWM Duty Cycle to control the L298N speed output, the duty cycle % is equal to the speed %
+ */
+void movement_set_speed(uint speed);
 
 #endif //MOVEMENT_H

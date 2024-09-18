@@ -5,6 +5,7 @@ add_library(movement
 
 target_link_libraries(movement
 	pico_stdlib
+	hardware_pwm
 )
 
 target_include_directories(movement PUBLIC
