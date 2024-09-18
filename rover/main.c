@@ -48,6 +48,20 @@ void dht11_task()
     }
 }
 
+void ldr_task(void *pvParameters)
+{
+    ldr_init();
+    uint16_t ldr_data;
+    while(1)
+    {
+        ldr_data = ldr_read();
+        printf("LDR Light Intensity: %d", ldr_data);
+        if (ldr_data > 3800)    ldr_headlight_toggle(1);
+        else                    ldr_headlight_toggle(0);
+        vTaskDelay(pdMS_TO_TICKS(200));
+    }
+}
+
 int main() {
     stdio_init_all();
 	//web_setup();
