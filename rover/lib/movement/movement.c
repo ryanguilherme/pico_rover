@@ -6,18 +6,22 @@ void movement_init()
     gpio_init(IN2);     gpio_set_dir(IN2, GPIO_OUT);
     gpio_init(IN3);     gpio_set_dir(IN3, GPIO_OUT);
     gpio_init(IN4);     gpio_set_dir(IN4, GPIO_OUT);
-
+    float duty_cycle=50;
+    // Set the GPIO function to PWM
     gpio_set_function(PWM_SPEED_PIN, GPIO_FUNC_PWM);
+
     // Find out which PWM slice is connected to the specified GPIO
     uint slice_num = pwm_gpio_to_slice_num(PWM_SPEED_PIN);
 
     // Calculate the PWM frequency and set the PWM wrap value
     float clock_freq = 125000000.0f;  // Default Pico clock frequency in Hz
-    uint32_t divider = clock_freq / (PWM_FREQUENCY * 4096);  // Compute divider for given frequency
+    uint32_t divider = clock_freq / (100 * 4096);  // Compute divider for given frequency
     pwm_set_clkdiv(slice_num, divider);
 
     // Set the PWM wrap value (maximum count value)
-    pwm_set_wrap(slice_num, 4095);  // 12-bit resolution (0-4095)
+    pwm_set_wrap(slice_num, 99);  // 12-bit resolution (0-4095)
+    // Enable the PWM
+    pwm_set_enabled(slice_num, true);
 }
 
 void movement_forward()
@@ -54,9 +58,8 @@ void movement_stop()
 
 void movement_set_speed(uint speed)
 {
-    // Set the duty cycle (50% = 2048/4096)
-    pwm_set_gpio_level(PWM_SPEED_PIN, (uint16_t)(speed * 4095));
+
     uint slice_num = pwm_gpio_to_slice_num(PWM_SPEED_PIN);
-    pwm_set_enabled(slice_num, true);
+    pwm_set_chan_level(slice_num, PWM_CHAN_B, speed);
 }
 

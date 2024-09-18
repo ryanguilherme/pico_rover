@@ -64,18 +64,8 @@ void ldr_task(void *pvParameters)
 
 void pwm_test_task() {
     movement_init();
+    movement_set_speed(47);
     while(1) {
-        movement_set_speed(50);
-        printf("DUTY CYCLE 50\n");
-        sleep_ms(2000);
-        movement_set_speed(25);
-        printf("DUTY CYCLE 25\n");
-        sleep_ms(2000);
-        movement_set_speed(10);
-        printf("DUTY CYCLE 10\n");
-        sleep_ms(2000);
-        movement_set_speed(100);
-        printf("DUTY CYCLE 10\n");
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
