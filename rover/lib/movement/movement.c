@@ -58,7 +58,6 @@ void movement_stop()
 
 void movement_set_speed(uint speed)
 {
-
     uint slice_num = pwm_gpio_to_slice_num(PWM_SPEED_PIN);
     pwm_set_chan_level(slice_num, PWM_CHAN_B, speed);
 }
