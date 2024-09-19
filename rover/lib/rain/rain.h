@@ -6,7 +6,6 @@
 #define RAIN_H
 
 #include "pico/stdlib.h"
-#include "hardware/adc.h"
 
 #define RAIN_PIN 10
 #define RAIN_ADC_PIN 27
@@ -19,15 +18,6 @@
  * [DESCRIPTION]: Initialize every necessary pin for the Raindrops sensor usage
  */
 void rain_init();
-
-/*
- * [NAME]:        Read_Percentual
- * [FUNCTION]:    rain_read_percentual()
- * [PARAMETERS]:  float
- * [DESCRIPTION]: Read the rain sensor value and return the percentual of rain value
- */
-
-float rain_read_percentual();
 
 /*
  * [NAME]:        Read
