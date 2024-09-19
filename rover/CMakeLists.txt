@@ -44,6 +44,7 @@ target_link_libraries(${ProjectName}
     wandering
     ldr
     dht11
+    rain
 )
 
 #Add subdirectories
