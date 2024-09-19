@@ -7,10 +7,15 @@
 #include "wandering.h"
 #include "ldr.h"
 #include "dht11.h"
+#include "rain.h"
 
 #define QUEUE_LENGTH 10
 
 QueueHandle_t ultrasonic_queue;
+
+TaskHandle_t xDHT11TaskHandle;
+TaskHandle_t xUltrasonicTaskHandle;
+TaskHandle_t xWanderingTaskHandle;
 
 void ultrasonic_task()
 {
@@ -34,7 +39,6 @@ void wandering_task()
 
 void dht11_task()
 {
-    sleep_ms(2000);
     int temperature;
     int humidity;
     dht11_init();
@@ -44,7 +48,7 @@ void dht11_task()
             printf("TEMPERATURE: %d, HUMIDITY: %d\n", temperature, humidity);
         else
             printf("[ERROR 0301]: Could not Read Data from DHT11\n");
-        vTaskDelay(pdMS_TO_TICKS(200));
+        vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
 
@@ -55,10 +59,22 @@ void ldr_task(void *pvParameters)
     while(1)
     {
         ldr_data = ldr_read();
-        printf("LDR Light Intensity: %d", ldr_data);
-        if (ldr_data > 3800)    ldr_headlight_toggle(1);
+        printf("LDR Light Intensity: %d\n", ldr_data);
+        if (ldr_data > 3800)        ldr_headlight_toggle(1);
         else                    ldr_headlight_toggle(0);
         vTaskDelay(pdMS_TO_TICKS(200));
+    }
+}
+
+void rain_task(void *pvParameters)
+{
+    rain_init();
+    while(1)
+    {
+        if (rain_read() == 1)
+        {
+            printf("[ALERT] IT IS CURRENTLY RAINING!\n");
+        }
     }
 }
 
@@ -70,16 +86,25 @@ void pwm_test_task() {
     }
 }
 
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
+    // Print the name of the task who overflowed
+    printf("Stack overflow detected in task: %s\n", pcTaskName);
+}
+
 int main() {
     stdio_init_all();
+    movement_set_speed(100);
 	//web_setup();
+    //printf("WEB successfully setup\n");
 
-    // ultrasonic_queue = xQueueCreate(QUEUE_LENGTH, sizeof(double));
+    ultrasonic_queue = xQueueCreate(QUEUE_LENGTH, sizeof(double));
     //
-    // xTaskCreate(ultrasonic_task, "UltrasonicTask", 256, NULL, 1, NULL);
-    // xTaskCreate(wandering_task, "WanderingTask", 256, NULL, 1, NULL);
-    // xTaskCreate(dht11_task, "dht11Task", 256, NULL, 1, NULL);
-    xTaskCreate(pwm_test_task, "pwmTestTask", 256, NULL, 1, NULL);
+    xTaskCreate(dht11_task, "dht11Task", 256, NULL, 1, &xDHT11TaskHandle);
+    xTaskCreate(wandering_task, "WanderingTask", 1024, NULL, 1, &xWanderingTaskHandle);
+    xTaskCreate(ultrasonic_task, "UltrasonicTask", 1024, NULL, 1, &xUltrasonicTaskHandle);
+
+    //xTaskCreate(pwm_test_task, "pwmTestTask", 256, NULL, 1, NULL);
+    //xTaskCreate(web_test_task, "webTestTask", 256, NULL, 1, NULL);
 
     vTaskStartScheduler();
     // Code should never reach here
