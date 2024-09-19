@@ -45,7 +45,7 @@ void ultrasonic_task(void *pvParameters)
     while(1)
     {
         double distance = ultrasonic_get_distance();
-        if (xQueueSend(ultrasonic_queue, &distance, portMAX_DELAY) != pdPASS)
+        if (xQueueSend(ultrasonic_queue, &distance, portMAX_DELAY /1000) != pdPASS)
         {
             printf("[ERROR 0101]: Failed to send Ultrasonic Distance Data to respective queue!\n");
             xQueueSend(alert_queue, 1, portMAX_DELAY/5);
@@ -74,7 +74,7 @@ void dht11_task(void *pvParameters)
             printf("[ERROR 0301]: Could not Read Data from DHT11\n");
             xQueueSend(alert_queue, 1, portMAX_DELAY/5);
         }
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(2000));
     }
 }
 
@@ -86,9 +86,9 @@ void ldr_task(void *pvParameters)
     {
         ldr_data = ldr_read();
         printf("LDR Light Intensity: %d\n", ldr_data);
-        if (ldr_data > 3800)        ldr_headlight_toggle(1);
+        if (ldr_data > 2000)        ldr_headlight_toggle(1);
         else                        ldr_headlight_toggle(0);
-        vTaskDelay(pdMS_TO_TICKS(200));
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
@@ -102,6 +102,7 @@ void rain_task(void *pvParameters)
             printf("[ALERT] IT IS CURRENTLY RAINING!\n");
             xQueueSend(alert_queue, 1, portMAX_DELAY/5);
         }
+        vTaskDelay(1000/portTICK_PERIOD_MS);
     }
 }
 
@@ -116,23 +117,53 @@ void pwm_test_task(void *pvParameters) {
 void remote_control_task(void *pvParameters)
 {
     remote_control_init();
-    while(1)
-    {
-        if (remote_control_control)
-        {
-            vTaskSuspend(xUltrasonicTaskHandle);
-            vTaskSuspend(xWanderingTaskHandle);
-            while(!remote_control_control())
-            {
-                if      (gpio_get(MOVE_FORWARD_PIN) == 1)    movement_forward();
-                else if (gpio_get(ROTATE_LEFT_PIN) == 1)     movement_rotate_left();
-                else if (gpio_get(ROTATE_RIGHT_PIN) == 1)    movement_rotate_right();
-                else if (gpio_get(STOP_PIN) == 1)            movement_stop();
-            }
-            vTaskResume(xUltrasonicTaskHandle);
-            vTaskResume(xWanderingTaskHandle);
-            vTaskDelay(pdMS_TO_TICKS(200));
+    int state = 0;
+    while(1) {
+        printf("%d %d %d %d\n", gpio_get(MOVE_FORWARD_PIN), gpio_get(ROTATE_LEFT_PIN), gpio_get(ROTATE_RIGHT_PIN), gpio_get(STOP_PIN));
+        printf("STATE IS %d\n", state);
+        if ((gpio_get(MOVE_FORWARD_PIN) == 0 && gpio_get(STOP_PIN) == 0) && state == 0) {
+            state = 1;
+            sleep_ms(1000);
         }
+        if ((gpio_get(MOVE_FORWARD_PIN) == 0 && gpio_get(STOP_PIN) == 0) && state == 1) {
+            state = 0;
+            sleep_ms(1000);
+        }
+
+        if (state == 1)
+        {
+            vTaskSuspend(xWanderingTaskHandle);
+            vTaskSuspend(xUltrasonicTaskHandle);
+            printf("INSIDE CONTROL FUNCTIONS\n");
+            printf("%d %d %d %d\n", gpio_get(MOVE_FORWARD_PIN), gpio_get(ROTATE_LEFT_PIN), gpio_get(ROTATE_RIGHT_PIN), gpio_get(STOP_PIN));
+            if(gpio_get(MOVE_FORWARD_PIN) == 0)
+            {
+                printf("MOVE FORWARD BUTTON PRESSED-----------------------\n");
+                movement_forward();
+            }
+            if(gpio_get(ROTATE_LEFT_PIN) == 0)
+            {
+                printf("ROTATE LEFT BUTTON PRESSED-----------------------\n");
+                movement_rotate_left();
+            }
+            if(gpio_get(ROTATE_RIGHT_PIN) == 0)
+            {
+                printf("ROTATE RIGHT BUTTON PRESSED-----------------------\n");
+                movement_rotate_right();
+            }
+            if(gpio_get(STOP_PIN) == 0)
+            {
+                printf("STOP BUTTON PRESSED-----------------------\n");
+                movement_stop();
+            }
+            vTaskDelay(pdMS_TO_TICKS(25));
+        }
+        if (state == 0)
+        {
+            vTaskResume(xWanderingTaskHandle);
+            vTaskResume(xUltrasonicTaskHandle);
+        }
+        vTaskDelay(pdMS_TO_TICKS(200));
     }
 }
 
@@ -143,18 +174,21 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
 
 int main() {
     stdio_init_all();
-    movement_set_speed(100);
+    movement_init();
+    movement_set_speed(70);
 	//web_setup();
     //printf("WEB successfully setup\n");
 
     ultrasonic_queue = xQueueCreate(QUEUE_LENGTH, sizeof(double));
     alert_queue = xQueueCreate(QUEUE_LENGTH, sizeof(uint));
     //
-    xTaskCreate(dht11_task, "dht11Task", 256, NULL, 1, &xDHT11TaskHandle);
+    xTaskCreate(dht11_task, "dht11Task", 128, NULL, 1, NULL);
     xTaskCreate(wandering_task, "WanderingTask", 1024, NULL, 1, &xWanderingTaskHandle);
-    xTaskCreate(ultrasonic_task, "UltrasonicTask", 1024, NULL, 1, &xUltrasonicTaskHandle);
+    xTaskCreate(ultrasonic_task, "UltrasonicTask", 1024, NULL, 2, &xUltrasonicTaskHandle);
     xTaskCreate(remote_control_task, "RemoteControlTask", 1024, NULL, 1, &xRemoteControlTaskHandle);
-    xTaskCreate(alert_task, "AlertTask", 128, NULL, 0, &xAlertTaskHandle);
+    xTaskCreate(alert_task, "AlertTask", 128, NULL, 1, &xAlertTaskHandle);
+    xTaskCreate(ldr_task, "LDRTask", 1024, NULL, 1, NULL);
+    xTaskCreate(rain_task, "RainTask", 128, NULL, 1, NULL);
 
     //xTaskCreate(pwm_test_task, "pwmTestTask", 256, NULL, 1, NULL);
     //xTaskCreate(web_test_task, "webTestTask", 256, NULL, 1, NULL);

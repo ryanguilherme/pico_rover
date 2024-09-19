@@ -21,6 +21,6 @@ void remote_control_init();
  * [PARAMETERS]:  void
  * [DESCRIPTION]: Verify if the combination of pins is current pressed to alternate the control of the rover
  */
-bool remote_control_control();
+int remote_control_control();
 
 #endif //REMOTE_CONTROL_H

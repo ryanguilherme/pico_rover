@@ -17,7 +17,7 @@ void wandering_loop(QueueHandle_t queue)
         }
         else
         {
-            printf("ULTRASONIC DISTANCE: %f\n", distance);
+            //printf("ULTRASONIC DISTANCE: %f\n", distance);
             if (distance <= MAX_DISTANCE)
             {
                 movement_rotate_right();
