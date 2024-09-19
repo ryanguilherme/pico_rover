@@ -45,6 +45,7 @@ target_link_libraries(${ProjectName}
     ldr
     dht11
     rain
+    remote_control
 )
 
 #Add subdirectories
