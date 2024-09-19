@@ -8,6 +8,7 @@
 #include "ldr.h"
 #include "dht11.h"
 #include "rain.h"
+#include "remote_control.h"
 
 #define QUEUE_LENGTH    10
 #define ALERT_LED       13
@@ -18,6 +19,7 @@ QueueHandle_t alert_queue;
 TaskHandle_t xDHT11TaskHandle;
 TaskHandle_t xUltrasonicTaskHandle;
 TaskHandle_t xWanderingTaskHandle;
+TaskHandle_t xRemoteControlTaskHandle;
 TaskHandle_t xAlertTaskHandle;
 
 void alert_task(void *pvParameters)
@@ -85,7 +87,7 @@ void ldr_task(void *pvParameters)
         ldr_data = ldr_read();
         printf("LDR Light Intensity: %d\n", ldr_data);
         if (ldr_data > 3800)        ldr_headlight_toggle(1);
-        else                    ldr_headlight_toggle(0);
+        else                        ldr_headlight_toggle(0);
         vTaskDelay(pdMS_TO_TICKS(200));
     }
 }
@@ -111,6 +113,29 @@ void pwm_test_task(void *pvParameters) {
     }
 }
 
+void remote_control_task(void *pvParameters)
+{
+    remote_control_init();
+    while(1)
+    {
+        if (remote_control_control)
+        {
+            vTaskSuspend(xUltrasonicTaskHandle);
+            vTaskSuspend(xWanderingTaskHandle);
+            while(!remote_control_control())
+            {
+                if      (gpio_get(MOVE_FORWARD_PIN) == 1)    movement_forward();
+                else if (gpio_get(ROTATE_LEFT_PIN) == 1)     movement_rotate_left();
+                else if (gpio_get(ROTATE_RIGHT_PIN) == 1)    movement_rotate_right();
+                else if (gpio_get(STOP_PIN) == 1)            movement_stop();
+            }
+            vTaskResume(xUltrasonicTaskHandle);
+            vTaskResume(xWanderingTaskHandle);
+            vTaskDelay(pdMS_TO_TICKS(200));
+        }
+    }
+}
+
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
     // Print the name of the task who overflowed
     printf("Stack overflow detected in task: %s\n", pcTaskName);
@@ -128,6 +153,7 @@ int main() {
     xTaskCreate(dht11_task, "dht11Task", 256, NULL, 1, &xDHT11TaskHandle);
     xTaskCreate(wandering_task, "WanderingTask", 1024, NULL, 1, &xWanderingTaskHandle);
     xTaskCreate(ultrasonic_task, "UltrasonicTask", 1024, NULL, 1, &xUltrasonicTaskHandle);
+    xTaskCreate(remote_control_task, "RemoteControlTask", 1024, NULL, 1, &xRemoteControlTaskHandle);
     xTaskCreate(alert_task, "AlertTask", 128, NULL, 0, &xAlertTaskHandle);
 
     //xTaskCreate(pwm_test_task, "pwmTestTask", 256, NULL, 1, NULL);
