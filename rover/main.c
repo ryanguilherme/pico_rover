@@ -44,10 +44,12 @@ void ultrasonic_task(void *pvParameters)
     ultrasonic_init();
     while(1)
     {
-        double distance = ultrasonic_get_distance();
-        if (xQueueSend(ultrasonic_queue, &distance, portMAX_DELAY /1000) != pdPASS)
+        double distance[2];
+        distance[0] = middle_ultrasonic_get_distance();
+        distance[1] = left_ultrasonic_get_distance();
+        if (xQueueSend(ultrasonic_queue, distance, portMAX_DELAY /1000) != pdPASS)
         {
-            printf("[ERROR 0101]: Failed to send Ultrasonic Distance Data to respective queue!\n");
+            printf("[ERROR 0101]: Failed to send some Ultrasonic Distance Data to respective queue!\n");
             xQueueSend(alert_queue, 1, portMAX_DELAY/5);
         }
         vTaskDelay(pdMS_TO_TICKS(200));
@@ -86,7 +88,7 @@ void ldr_task(void *pvParameters)
     {
         ldr_data = ldr_read();
         printf("LDR Light Intensity: %d\n", ldr_data);
-        if (ldr_data > 2000)        ldr_headlight_toggle(1);
+        if (ldr_data > 3000)        ldr_headlight_toggle(1);
         else                        ldr_headlight_toggle(0);
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
@@ -179,7 +181,7 @@ int main() {
 	//web_setup();
     //printf("WEB successfully setup\n");
 
-    ultrasonic_queue = xQueueCreate(QUEUE_LENGTH, sizeof(double));
+    ultrasonic_queue = xQueueCreate(QUEUE_LENGTH, sizeof(double[2]));
     alert_queue = xQueueCreate(QUEUE_LENGTH, sizeof(uint));
     //
     xTaskCreate(dht11_task, "dht11Task", 128, NULL, 1, NULL);
