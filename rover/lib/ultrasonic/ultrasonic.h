@@ -3,8 +3,10 @@
 
 #include "pico/stdlib.h"
 
-#define ECHO_PIN     2
-#define TRIGGER_PIN  3
+#define M_ECHO_PIN     2
+#define M_TRIGGER_PIN  3
+#define L_ECHO_PIN     0
+#define L_TRIGGER_PIN  1
 
 /*
  * [NAME]:        Init
@@ -15,10 +17,17 @@
 void ultrasonic_init();
 /*
  * [NAME]:        Get Distance
- * [FUNCTION]:    ultrasonic_get_distance()
+ * [FUNCTION]:    middle_ultrasonic_get_distance()
  * [PARAMETERS]:  void
- * [DESCRIPTION]: Get the distance of what is in front of the Rover
+ * [DESCRIPTION]: Get the distance of what is in the middle of the front of the Rover
  */
-double ultrasonic_get_distance();
+double middle_ultrasonic_get_distance();
+/*
+ * [NAME]:        Get Distance
+ * [FUNCTION]:    left_ultrasonic_get_distance()
+ * [PARAMETERS]:  void
+ * [DESCRIPTION]: Get the distance of what is in front of the left corner of the Rover
+ */
+double left_ultrasonic_get_distance();
 
 #endif //ULTRASONIC_H
