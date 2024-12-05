@@ -8,7 +8,7 @@ void wandering_setup()
 
 void wandering_loop(QueueHandle_t queue)
 {
-    double distance;
+    double distance[2];
     while(1)
     {
         if (!xQueueReceive(queue, &distance, portMAX_DELAY))
@@ -17,8 +17,9 @@ void wandering_loop(QueueHandle_t queue)
         }
         else
         {
-            //printf("ULTRASONIC DISTANCE: %f\n", distance);
-            if (distance <= MAX_DISTANCE)
+            printf("[WANDER] MIDDLE ULTRASONIC DISTANCE: %f\n", distance[0]);
+            printf("[WANDER] MIDDLE ULTRASONIC DISTANCE: %f\n", distance[1]);
+            if (distance[0] <= MAX_DISTANCE || distance[1] <= MAX_DISTANCE)
             {
                 movement_rotate_right();
             } else
